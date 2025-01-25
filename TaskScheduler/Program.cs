@@ -16,7 +16,9 @@
 
             TaskScheduler taskScheduler = new TaskScheduler();
             taskScheduler.AddTask(myTask);
-            taskScheduler.RunScheduledTasks();
+            taskScheduler.Start();
+            Thread.Sleep(10000);
+            taskScheduler.Stop();
         }
     }
 }

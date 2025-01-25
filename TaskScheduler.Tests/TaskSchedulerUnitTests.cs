@@ -1,17 +1,8 @@
-﻿using Xunit.Abstractions;
-
-namespace TaskScheduler.Tests;
+﻿namespace TaskScheduler.Tests;
 using System.Text.Json;
 
 public class TaskSchedulerUnitTests
 {
-    private readonly ITestOutputHelper _testOutputHelper;
-
-    public TaskSchedulerUnitTests(ITestOutputHelper testOutputHelper)
-    {
-        _testOutputHelper = testOutputHelper;
-    }
-
     [Fact]
     public void Task_Initialization_ShouldSetPropertiesCorrectly()
     {
@@ -25,7 +16,7 @@ public class TaskSchedulerUnitTests
             RecurrenceInterval = TimeSpan.FromHours(1)
         };
         
-        // Act and Assert
+        // Assert
         Assert.Equal("Test Task", task.Name);
         Assert.Equal(TimeSpan.FromMinutes(30), task.Duration);
         Assert.True(task.IsRecurring);
@@ -74,6 +65,33 @@ public class TaskSchedulerUnitTests
     }
     
     [Fact]
+    public void TaskScheduler_ShouldExecuteRecurringTaskNTimes()
+    {
+        // Arrange
+        var scheduler = new TaskScheduler("testing.json");
+        var task = new Task
+        {
+            Name = "Test Recurring Task",
+            StartTime = DateTime.Now,
+            Duration = TimeSpan.FromMinutes(30),
+            IsRecurring = true,
+            RecurrenceInterval = TimeSpan.FromSeconds(1),
+            MaxTimesDone = 2
+        };
+        scheduler.AddTask(task);
+
+        // Act and Assert
+        scheduler.RunScheduledTasks();
+        Assert.False(task.IsCompleted);
+        Assert.True(task.StartTime > DateTime.Now);
+        Thread.Sleep(1100);
+        scheduler.RunScheduledTasks();
+        Assert.True(task.IsCompleted);
+        
+        scheduler.ClearTasks();
+    }
+    
+    [Fact]
     public void TaskScheduler_ShouldExecuteSingleTask()
     {
         // Arrange
@@ -93,6 +111,33 @@ public class TaskSchedulerUnitTests
 
         // Assert
         Assert.True(task.IsCompleted);
+        
+        scheduler.ClearTasks();
+    }
+    
+    [Fact]
+    public void TaskScheduler_ShouldExecuteWhenStarted()
+    {
+        // Arrange
+        var scheduler = new TaskScheduler("testing.json");
+        var task = new Task
+        {
+            Name = "Test Single Task",
+            StartTime = DateTime.Now,
+            Duration = TimeSpan.FromMinutes(30),
+            IsRecurring = true,
+            RecurrenceInterval = TimeSpan.FromSeconds(1)
+        };
+        scheduler.AddTask(task);
+
+        // Act
+        scheduler.Start();
+        Thread.Sleep(3000);
+        scheduler.Stop();
+
+        // Assert
+        Assert.False(task.IsCompleted);
+        Assert.True(task.TimesDone > 2);
         
         scheduler.ClearTasks();
     }

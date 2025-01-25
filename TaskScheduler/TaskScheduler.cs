@@ -6,6 +6,7 @@ public class TaskScheduler
 {
     private List<Task> _tasks;
     private readonly string _filePath;
+    private CancellationTokenSource? _cancellationTokenSource;
 
     public TaskScheduler(string filePath = "tasks.json")
     {
@@ -15,8 +16,42 @@ public class TaskScheduler
     
     public int TaskCount => _tasks.Count;
     
-    public List<Task> Tasks => _tasks; 
+    public List<Task> Tasks => _tasks;
 
+    public void Start()
+    {
+        if (_cancellationTokenSource != null)
+        {
+            Console.WriteLine("Scheduler is already running.");
+            return;
+        }
+        _cancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = _cancellationTokenSource.Token;
+        
+        System.Threading.Tasks.Task.Run(async () =>
+        {
+            Console.WriteLine("Scheduler started.");
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                RunScheduledTasks();
+                await System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+            }
+        }, cancellationToken);
+    }
+    
+    public void Stop()
+    {
+        if (_cancellationTokenSource == null)
+        {
+            Console.WriteLine("Scheduler is not running.");
+            return;
+        }
+
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource = null;
+        Console.WriteLine("Scheduler stopped.");
+    }
+    
     public void AddTask(Task task)
     {
         _tasks.Add(task);
@@ -32,10 +67,9 @@ public class TaskScheduler
             {
                 ExecuteTask(task);
 
-                if (task is { IsRecurring: true, RecurrenceInterval: not null })
+                if (task is { IsRecurring: true, RecurrenceInterval: not null, IsCompleted: false })
                 {
                     task.StartTime = now.Add(task.RecurrenceInterval.Value);
-                    task.IsCompleted = false;
                 }
             }
         }
@@ -45,7 +79,13 @@ public class TaskScheduler
     private void ExecuteTask(Task task)
     {
         Console.WriteLine("Executing task: " + task.Name);
+        task.TimesDone += 1;
         task.IsCompleted = true;
+        if (!task.IsRecurring) return;
+        if (task.MaxTimesDone is null || task.TimesDone < task.MaxTimesDone.Value)
+        {
+            task.IsCompleted = false;
+        }
     }
 
     private void SaveTasks()

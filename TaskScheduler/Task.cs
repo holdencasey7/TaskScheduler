@@ -10,6 +10,8 @@ public class Task
     public bool IsRecurring { get; set; }
     public TimeSpan? RecurrenceInterval { get; set; }
     public bool IsCompleted { get; set; }
+    public int TimesDone { get; set; }
+    public int? MaxTimesDone { get; set; }
     
 
     public override string ToString()
