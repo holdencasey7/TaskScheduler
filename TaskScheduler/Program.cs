@@ -1,8 +1,8 @@
 ﻿namespace TaskScheduler
 {
-    class Program
+    static class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             Task myTask = new Task
             {

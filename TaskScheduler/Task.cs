@@ -9,6 +9,8 @@ public class Task
     public TimeSpan Duration { get; set; }
     public bool IsRecurring { get; set; }
     public TimeSpan? RecurrenceInterval { get; set; }
+    public bool IsCompleted { get; set; }
+    
 
     public override string ToString()
     {
