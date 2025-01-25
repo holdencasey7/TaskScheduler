@@ -143,6 +143,32 @@ public class TaskSchedulerUnitTests
     }
     
     [Fact]
+    public void TaskScheduler_ShouldExecuteTaskWhenAddedAfterStart()
+    {
+        // Arrange
+        var scheduler = new TaskScheduler("testing.json");
+        var task = new Task
+        {
+            Name = "Test Single Task",
+            StartTime = DateTime.Now,
+            Duration = TimeSpan.FromMinutes(30),
+            IsRecurring = false
+        };
+
+        // Act
+        scheduler.Start();
+        Thread.Sleep(1000);
+        scheduler.AddTask(task);
+        Thread.Sleep(1000);
+        scheduler.Stop();
+
+        // Assert
+        Assert.True(task.IsCompleted);
+        
+        scheduler.ClearTasks();
+    }
+    
+    [Fact]
     public void ClearTasks_ShouldRemoveAllTasksAndDeleteFile()
     {
         // Arrange
@@ -203,4 +229,38 @@ public class TaskSchedulerUnitTests
         
         scheduler.ClearTasks();
     }
+    
+    [Fact]
+    public void RemoveTask_TaskRemovedFromJsonButOtherTasksRemain()
+    {
+        // Arrange
+        var scheduler = new TaskScheduler("testing.json");
+        var task1 = new Task
+        {
+            Name = "Task 1",
+            StartTime = DateTime.Now.AddMinutes(10),
+            Duration = TimeSpan.FromMinutes(30),
+            IsRecurring = false
+        };
+        var task2 = new Task
+        {
+            Name = "Task 2",
+            StartTime = DateTime.Now.AddMinutes(20),
+            Duration = TimeSpan.FromMinutes(45),
+            IsRecurring = true
+        };
+        scheduler.AddTask(task1);
+        scheduler.AddTask(task2);
+
+        // Act
+        scheduler.RemoveTask(task1.Id);
+
+        // Assert
+        var jsonContent = File.ReadAllText("testing.json");
+        Assert.False(jsonContent.Contains(task1.Id.ToString()), "Removed task should no longer be in the JSON file.");
+        Assert.True(jsonContent.Contains(task2.Id.ToString()), "Remaining task should still be in the JSON file.");
+        
+        scheduler.ClearTasks();
+    }
+
 }

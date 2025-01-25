@@ -127,6 +127,21 @@ public class TaskScheduler
         _tasks = LoadTasks(filePath);
     }
     
+    public void RemoveTask(Guid id)
+    {
+        var taskToRemove = _tasks.FirstOrDefault(t => t.Id == id);
+        if (taskToRemove != null)
+        {
+            _tasks.Remove(taskToRemove);
+            SaveTasks();
+            Console.WriteLine($"Task with ID {id} removed successfully.");
+        }
+        else
+        {
+            Console.WriteLine($"Task with ID {id} not found.");
+        }
+    }
+    
     public void ClearTasks()
     {
         _tasks.Clear();
