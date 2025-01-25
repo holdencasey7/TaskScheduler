@@ -6,15 +6,17 @@
         {
             Task myTask = new Task
             {
-                Name = "My Task",
+                Name = "My Secondly Task",
                 Description = "My Task description",
                 Duration = TimeSpan.FromMinutes(30),
                 StartTime = DateTime.Now,
                 IsRecurring = true,
-                RecurrenceInterval = TimeSpan.FromHours(1),
+                RecurrenceInterval = TimeSpan.FromSeconds(5),
             };
-            
-            Console.WriteLine(myTask);
+
+            TaskScheduler taskScheduler = new TaskScheduler();
+            taskScheduler.AddTask(myTask);
+            taskScheduler.RunScheduledTasks();
         }
     }
 }
