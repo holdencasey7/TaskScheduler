@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskScheduler", "TaskScheduler\TaskScheduler.csproj", "{F6368649-601C-472B-BFFC-33801E71CB6C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskScheduler.Tests", "TaskScheduler.Tests\TaskScheduler.Tests.csproj", "{A15A848D-6063-4CE4-B4BD-CAA63022BA17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{F6368649-601C-472B-BFFC-33801E71CB6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6368649-601C-472B-BFFC-33801E71CB6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6368649-601C-472B-BFFC-33801E71CB6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A15A848D-6063-4CE4-B4BD-CAA63022BA17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A15A848D-6063-4CE4-B4BD-CAA63022BA17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A15A848D-6063-4CE4-B4BD-CAA63022BA17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A15A848D-6063-4CE4-B4BD-CAA63022BA17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
