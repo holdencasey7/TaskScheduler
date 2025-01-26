@@ -1,6 +1,6 @@
-# Task Scheduler Project
+# Task Scheduler Backend
 
-A simple task scheduler implemented in C# with persistent storage using JSON. The Task Scheduler runs tasks on a specified schedule and supports recurring tasks. Tasks are loaded from a JSON file and can be added, removed, or updated during runtime.
+A simple task scheduler implemented in C# with persistent storage using JSON. The Task Scheduler runs tasks on a specified schedule and supports recurring tasks. Tasks are loaded from a JSON file and can be added, removed, or updated during runtime. API built with ASP.NET Core.
 
 ## Features
 
