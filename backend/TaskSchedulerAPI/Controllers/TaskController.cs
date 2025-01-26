@@ -27,6 +27,14 @@ public class TaskController : ControllerBase
         return Ok();
     }
 
+    [HttpPut("{id:guid}")]
+    public IActionResult UpdateTask(System.Guid id, [FromBody] TaskScheduler.Task task)
+    {
+        _scheduler.RemoveTask(id);
+        _scheduler.AddTask(task);
+        return Ok();
+    }
+
     [HttpDelete("{id:guid}")]
     public IActionResult RemoveTask(Guid id)
     {
