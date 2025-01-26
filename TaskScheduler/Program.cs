@@ -1,6 +1,8 @@
-﻿namespace TaskScheduler
+﻿using Microsoft.Extensions.Configuration;
+
+namespace TaskScheduler
 {
-    static class Program
+    class Program
     {
         static void Main()
         {
@@ -13,8 +15,10 @@
                 IsRecurring = true,
                 RecurrenceInterval = TimeSpan.FromSeconds(5),
             };
-
-            EmailService emailService = new EmailService();
+            var configuration = new ConfigurationBuilder()
+                .AddUserSecrets<Program>()
+                .Build();
+            EmailService emailService = new EmailService(configuration);
             
             TaskScheduler taskScheduler = new TaskScheduler(emailService);
             taskScheduler.AddTask(myTask);
