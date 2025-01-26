@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using System.Text.Json;
 
 namespace TaskScheduler;
@@ -7,11 +9,13 @@ public class TaskScheduler
     private List<Task> _tasks;
     private readonly string _filePath;
     private CancellationTokenSource? _cancellationTokenSource;
+    private readonly IEmailService _emailService;
 
-    public TaskScheduler(string filePath = "tasks.json")
+    public TaskScheduler(IEmailService emailService, string filePath = "tasks.json")
     {
         _tasks = LoadTasks();
         _filePath = filePath;
+        _emailService = emailService;
     }
     
     public int TaskCount => _tasks.Count;
@@ -79,6 +83,7 @@ public class TaskScheduler
     private void ExecuteTask(Task task)
     {
         Console.WriteLine("Executing task: " + task.Name);
+        SendTaskReminder(task);
         task.TimesDone += 1;
         task.IsCompleted = true;
         if (!task.IsRecurring) return;
@@ -150,5 +155,13 @@ public class TaskScheduler
         {
             File.Delete(_filePath);
         }
+    }
+
+    public void SendTaskReminder(Task task)
+    {
+        string subject = $"Task Reminder! {task.Name} is Due!";
+        string body = $"Due at {DateTime.Now}\n{task.Description ?? "No description provided."}";
+        string recipient = "me@holdencasey.com";
+        _emailService.SendEmail(recipient, subject, body);
     }
 }

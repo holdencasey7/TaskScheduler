@@ -14,7 +14,9 @@
                 RecurrenceInterval = TimeSpan.FromSeconds(5),
             };
 
-            TaskScheduler taskScheduler = new TaskScheduler();
+            EmailService emailService = new EmailService();
+            
+            TaskScheduler taskScheduler = new TaskScheduler(emailService);
             taskScheduler.AddTask(myTask);
             taskScheduler.Start();
             Thread.Sleep(10000);

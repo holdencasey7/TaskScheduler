@@ -1,4 +1,6 @@
-﻿namespace TaskScheduler.Tests;
+﻿using Moq;
+
+namespace TaskScheduler.Tests;
 using System.Text.Json;
 
 public class TaskSchedulerUnitTests
@@ -42,7 +44,8 @@ public class TaskSchedulerUnitTests
     public void TaskScheduler_ShouldExecuteRecurringTask()
     {
         // Arrange
-        var scheduler = new TaskScheduler("testing.json");
+        var mockEmailService = new Mock<IEmailService>();
+        var scheduler = new TaskScheduler(mockEmailService.Object, "testing.json");
         var task = new Task
         {
             Name = "Test Recurring Task",
@@ -68,7 +71,8 @@ public class TaskSchedulerUnitTests
     public void TaskScheduler_ShouldExecuteRecurringTaskNTimes()
     {
         // Arrange
-        var scheduler = new TaskScheduler("testing.json");
+        var mockEmailService = new Mock<IEmailService>();
+        var scheduler = new TaskScheduler(mockEmailService.Object, "testing.json");
         var task = new Task
         {
             Name = "Test Recurring Task",
@@ -95,7 +99,8 @@ public class TaskSchedulerUnitTests
     public void TaskScheduler_ShouldExecuteSingleTask()
     {
         // Arrange
-        var scheduler = new TaskScheduler("testing.json");
+        var mockEmailService = new Mock<IEmailService>();
+        var scheduler = new TaskScheduler(mockEmailService.Object, "testing.json");
         var task = new Task
         {
             Name = "Test Single Task",
@@ -119,7 +124,8 @@ public class TaskSchedulerUnitTests
     public void TaskScheduler_ShouldExecuteWhenStarted()
     {
         // Arrange
-        var scheduler = new TaskScheduler("testing.json");
+        var mockEmailService = new Mock<IEmailService>();
+        var scheduler = new TaskScheduler(mockEmailService.Object, "testing.json");
         var task = new Task
         {
             Name = "Test Single Task",
@@ -146,7 +152,8 @@ public class TaskSchedulerUnitTests
     public void TaskScheduler_ShouldExecuteTaskWhenAddedAfterStart()
     {
         // Arrange
-        var scheduler = new TaskScheduler("testing.json");
+        var mockEmailService = new Mock<IEmailService>();
+        var scheduler = new TaskScheduler(mockEmailService.Object, "testing.json");
         var task = new Task
         {
             Name = "Test Single Task",
@@ -172,7 +179,8 @@ public class TaskSchedulerUnitTests
     public void ClearTasks_ShouldRemoveAllTasksAndDeleteFile()
     {
         // Arrange
-        var scheduler = new TaskScheduler("testing.json");
+        var mockEmailService = new Mock<IEmailService>();
+        var scheduler = new TaskScheduler(mockEmailService.Object, "testing.json");
         scheduler.AddTask(new Task { Name = "Test Task 1" });
         scheduler.RunScheduledTasks();
         scheduler.AddTask(new Task { Name = "Test Task 2" });
@@ -189,7 +197,8 @@ public class TaskSchedulerUnitTests
     public void AddTask_ShouldSaveTaskToJson()
     {
         // Arrange
-        var scheduler = new TaskScheduler("testing.json");
+        var mockEmailService = new Mock<IEmailService>();
+        var scheduler = new TaskScheduler(mockEmailService.Object, "testing.json");
         var task = new Task
         {
             Name = "a83fKoI32",
@@ -212,7 +221,8 @@ public class TaskSchedulerUnitTests
     public void LoadTasks_ShouldLoadExistingTasksFromJson()
     {
         // Arrange
-        var scheduler = new TaskScheduler("testing.json");
+        var mockEmailService = new Mock<IEmailService>();
+        var scheduler = new TaskScheduler(mockEmailService.Object, "testing.json");
         var tasks = new List<Task>
         {
             new Task { Name = "Task 1", StartTime = DateTime.Now, Duration = TimeSpan.FromHours(1) },
@@ -234,7 +244,8 @@ public class TaskSchedulerUnitTests
     public void RemoveTask_TaskRemovedFromJsonButOtherTasksRemain()
     {
         // Arrange
-        var scheduler = new TaskScheduler("testing.json");
+        var mockEmailService = new Mock<IEmailService>();
+        var scheduler = new TaskScheduler(mockEmailService.Object, "testing.json");
         var task1 = new Task
         {
             Name = "Task 1",
