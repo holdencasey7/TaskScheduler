@@ -5,7 +5,7 @@ export interface Task {
     startTime: string;
     duration: string;
     isRecurring: boolean;
-    reccurenceInterval?: string;
+    recurrenceInterval?: string;
     isCompleted: boolean;
     timesDone: number;
     maxTimesDone?: number;

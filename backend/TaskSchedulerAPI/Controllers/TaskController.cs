@@ -17,12 +17,14 @@ public class TaskController : ControllerBase
     [HttpGet]
     public IActionResult GetAllTasks()
     {
+        Console.WriteLine("GetAllTasks Request");
         return Ok(_scheduler.Tasks);
     }
 
     [HttpPost]
     public IActionResult AddTask([FromBody] TaskScheduler.Task task)
     {
+        Console.WriteLine("AddTask Request");
         _scheduler.AddTask(task);
         return Ok();
     }
@@ -30,6 +32,7 @@ public class TaskController : ControllerBase
     [HttpPut("{id:guid}")]
     public IActionResult UpdateTask(System.Guid id, [FromBody] TaskScheduler.Task task)
     {
+        Console.WriteLine("UpdateTask Request");
         _scheduler.RemoveTask(id);
         _scheduler.AddTask(task);
         return Ok();
@@ -38,6 +41,7 @@ public class TaskController : ControllerBase
     [HttpDelete("{id:guid}")]
     public IActionResult RemoveTask(Guid id)
     {
+        Console.WriteLine("RemoveTask Request");
         _scheduler.RemoveTask(id);
         return Ok();
     }
@@ -45,6 +49,7 @@ public class TaskController : ControllerBase
     [HttpPost("start")]
     public IActionResult StartScheduler()
     {
+        Console.WriteLine("Start Request");
         _scheduler.Start();
         return Ok();
     }
@@ -52,6 +57,7 @@ public class TaskController : ControllerBase
     [HttpPost("stop")]
     public IActionResult StopScheduler()
     {
+        Console.WriteLine("Stop Request");
         _scheduler.Stop();
         return Ok();
     }
@@ -59,6 +65,7 @@ public class TaskController : ControllerBase
     [HttpPost("clear")]
     public IActionResult ClearScheduler()
     {
+        Console.WriteLine("Clear Request");
         _scheduler.ClearTasks();
         return Ok();
     }

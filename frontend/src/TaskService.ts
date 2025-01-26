@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Task } from "./types/Task";
 
-const API_BASE_URL = "http://localhost:5000/api/tasks";
+const API_BASE_URL = "http://localhost:5000/api/task";
 
 export const getTasks = async () => {
     const response = await axios.get(API_BASE_URL);
@@ -9,8 +9,22 @@ export const getTasks = async () => {
 };
 
 export const addTask = async (task: Task) => {
-    console.log("Adding task: ", task);
-    const response = await axios.post(API_BASE_URL, task);
+    const taskData = {
+        name: task.name,
+        description: task.description,
+        startTime: task.startTime,
+        duration: task.duration,
+        isRecurring: task.isRecurring,
+        recurrenceInterval: task.recurrenceInterval,
+        isCompleted: task.isCompleted,
+        timesDone: task.timesDone,
+        maxTimesDone: task.maxTimesDone,
+    };
+    const response = await axios.post(API_BASE_URL, taskData, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
     return response.data;
 };
 

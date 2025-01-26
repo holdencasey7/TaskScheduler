@@ -158,7 +158,7 @@ public class TaskScheduler
     private void SendTaskReminder(Task task)
     {
         string subject = $"Task Reminder! {task.Name} is Due!";
-        string body = $"Due at {DateTime.Now}\n{task.Description ?? "No description provided."}";
+        string body = $"Due at {task.StartTime}\n{task.Description ?? "No description provided."}";
         string recipient = "me@holdencasey.com";
         try
         {
