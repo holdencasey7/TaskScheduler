@@ -1,5 +1,3 @@
-using System.Net;
-using System.Net.Mail;
 using System.Text.Json;
 
 namespace TaskScheduler;
@@ -157,11 +155,18 @@ public class TaskScheduler
         }
     }
 
-    public void SendTaskReminder(Task task)
+    private void SendTaskReminder(Task task)
     {
         string subject = $"Task Reminder! {task.Name} is Due!";
         string body = $"Due at {DateTime.Now}\n{task.Description ?? "No description provided."}";
         string recipient = "me@holdencasey.com";
-        _emailService.SendEmail(recipient, subject, body);
+        try
+        {
+            _emailService.SendEmail(recipient, subject, body);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 }

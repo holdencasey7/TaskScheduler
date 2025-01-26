@@ -10,13 +10,13 @@ public class EmailService : IEmailService
         var smtpClient = new SmtpClient("smtp.gmail.com")
         {
             Port = 587,
-            Credentials = new NetworkCredential("me@holdencasey.com", "mduz hhkz azdo mnlo"),
+            Credentials = new NetworkCredential("me@holdencasey.com", "previous password revoked"),
             EnableSsl = true,
         };
 
         var mailMessage = new MailMessage
         {
-            From = new MailAddress("taskscheduler@holdencasey.com"),
+            From = new MailAddress("me@holdencasey.com"),
             Subject = subject,
             Body = body,
             IsBodyHtml = false,
