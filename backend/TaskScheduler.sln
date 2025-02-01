@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskScheduler", "TaskSchedu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskScheduler.Tests", "TaskScheduler.Tests\TaskScheduler.Tests.csproj", "{A15A848D-6063-4CE4-B4BD-CAA63022BA17}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskSchedulerAPI", "TaskSchedulerAPI\TaskSchedulerAPI.csproj", "{71799478-9767-4AC9-A4C8-F9691C42DE84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{A15A848D-6063-4CE4-B4BD-CAA63022BA17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A15A848D-6063-4CE4-B4BD-CAA63022BA17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A15A848D-6063-4CE4-B4BD-CAA63022BA17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71799478-9767-4AC9-A4C8-F9691C42DE84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71799478-9767-4AC9-A4C8-F9691C42DE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71799478-9767-4AC9-A4C8-F9691C42DE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71799478-9767-4AC9-A4C8-F9691C42DE84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
