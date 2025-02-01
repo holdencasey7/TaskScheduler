@@ -1,22 +1,16 @@
-// import { useState } from "react";
 import TaskForm from "./TaskForm";
-import TaskList from "./TaskList";
-import SchedulerControl from "./SchedulerControl";
 import { Task } from "./types/Task";
+import { AxiosResponse } from "axios";
 
 function App() {
-    // const [tasks, setTasks] = useState<Task[]>([])
-
-    const handleTaskAdded = (task: Task) => {
-        console.log(task);
+    const handleTaskAdded = (task: AxiosResponse<Task>) => {
+        console.log("Task added", task);
     };
 
     return (
         <div>
             <h1>Task Scheduler</h1>
-            <SchedulerControl />
             <TaskForm onTaskAdded={handleTaskAdded} />
-            <TaskList />
         </div>
     );
 }

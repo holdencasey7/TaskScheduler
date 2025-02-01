@@ -1,37 +1,44 @@
 import { FormEvent, FormEventHandler, useState } from "react";
 import { Task } from "./types/Task";
 import { addTask } from "./TaskService";
+import { AxiosResponse } from "axios";
 
 interface TaskFormProps {
-    onTaskAdded: (task: Task) => void;
+    onTaskAdded: (task: AxiosResponse<Task>) => void;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ onTaskAdded }) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [startTime, setStartTime] = useState("");
-    const [duration, setDuration] = useState("");
+    const [executionTime, setExecutionTime] = useState(
+        new Date().toISOString()
+    );
+
+    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const localDate = new Date(event.target.value);
+        const isoDateTime = localDate.toISOString();
+        setExecutionTime(isoDateTime);
+    };
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (
         e: FormEvent<HTMLFormElement>
     ) => {
         e.preventDefault();
         const newTask: Task = {
-            id: "",
+            id: crypto.randomUUID(),
             name,
             description,
-            startTime,
-            duration,
-            isRecurring: false,
+            executionTime: executionTime,
             isCompleted: false,
             timesDone: 0,
         };
         const addedTask = await addTask(newTask);
-        onTaskAdded(addedTask);
+        if (addedTask) {
+            onTaskAdded(addedTask);
+        }
         setName("");
         setDescription("");
-        setStartTime("");
-        setDuration("");
+        setExecutionTime(new Date().toISOString());
     };
 
     return (
@@ -53,22 +60,14 @@ const TaskForm: React.FC<TaskFormProps> = ({ onTaskAdded }) => {
                     onChange={(e) => setDescription(e.target.value)}
                 />
             </label>
-            <label>
-                Start Time:
-                <input
-                    type="text"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                />
-            </label>
-            <label>
-                Duration:
-                <input
-                    type="text"
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                />
-            </label>
+            <label htmlFor="datetime">Reminder Time:</label>
+            <input
+                type="datetime-local"
+                id="datetime"
+                name="datetime"
+                value={new Date(executionTime).toISOString().slice(0, 16)}
+                onChange={handleDateChange}
+            />
             <button type="submit">Add</button>
         </form>
     );
