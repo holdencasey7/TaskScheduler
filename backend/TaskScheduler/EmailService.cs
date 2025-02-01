@@ -1,17 +1,26 @@
 using System.Net;
 using System.Net.Mail;
-using Microsoft.Extensions.Configuration;
+using Amazon.SecretsManager.Extensions.Caching;
+using Newtonsoft.Json;
 
 namespace TaskScheduler;
 
-public class EmailService(IConfiguration configuration) : IEmailService
+public class EmailService() : IEmailService
 {
-    private readonly IConfiguration _configuration = configuration;
+    private const string EmailCredentialsSecretName = "TaskScheduler/EmailCredentials";
 
-    public void SendEmail(string recipientEmail, string subject, string body)
+    private static readonly SecretCacheConfiguration CacheConfiguration = new SecretCacheConfiguration
     {
-        var emailUser = _configuration["Email:User"] ?? throw new Exception("Email user not configured.");
-        var emailPassword = _configuration["Email:Password"] ?? throw new Exception("Email password not configured.");
+        CacheItemTTL = 86400000
+    };
+    private readonly SecretsManagerCache _cache = new SecretsManagerCache(CacheConfiguration);
+    
+    public async Task<bool> SendEmailAsync(string recipientEmail, string subject, string body)
+    {
+        var secretString = await _cache.GetSecretString(EmailCredentialsSecretName) ?? throw new Exception("Email credentials not configured.");
+        var emailCredentials = JsonConvert.DeserializeObject<Dictionary<string, string>>(secretString) ?? throw new Exception("Email credentials not deserialized.");
+        var emailUser = emailCredentials["User"] ?? throw new Exception("Email user not found.");
+        var emailPassword = emailCredentials["Password"] ?? throw new Exception("Email password not found.");
         
         var smtpClient = new SmtpClient("smtp.gmail.com")
         {
@@ -22,7 +31,7 @@ public class EmailService(IConfiguration configuration) : IEmailService
 
         var mailMessage = new MailMessage
         {
-            From = new MailAddress(emailUser ?? "noreply@gmail.com"),
+            From = new MailAddress(emailUser),
             Subject = subject,
             Body = body,
             IsBodyHtml = false,
@@ -30,6 +39,16 @@ public class EmailService(IConfiguration configuration) : IEmailService
 
         mailMessage.To.Add(recipientEmail);
 
-        smtpClient.Send(mailMessage);
+        try
+        {
+            smtpClient.Send(mailMessage);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return false;
+        }
+        
+        return true;
     }
 }

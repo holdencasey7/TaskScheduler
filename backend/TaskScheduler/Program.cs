@@ -1,30 +1,30 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Amazon.Lambda.Core;
+using Amazon.Lambda.APIGatewayEvents;
+using Newtonsoft.Json;
+using JsonSerializer = Amazon.Lambda.Serialization.Json.JsonSerializer;
 
+[assembly: LambdaSerializer(typeof(JsonSerializer))]
 namespace TaskScheduler
 {
     public class Program
     {
-        static void Main()
+        public static async Task Main()
         {
-            Task myTask = new Task
-            {
-                Name = "My Secondly Task",
-                Description = "My Task description",
-                Duration = TimeSpan.FromMinutes(30),
-                StartTime = DateTime.Now,
-                IsRecurring = true,
-                RecurrenceInterval = TimeSpan.FromSeconds(5),
-            };
-            var configuration = new ConfigurationBuilder()
-                .AddUserSecrets<Program>()
-                .Build();
-            EmailService emailService = new EmailService(configuration);
-            
-            TaskScheduler taskScheduler = new TaskScheduler(emailService);
-            taskScheduler.AddTask(myTask);
-            taskScheduler.Start();
-            Thread.Sleep(10000);
-            taskScheduler.Stop();
+            Console.WriteLine("Creating Email Service");
+            EmailService emailService = new EmailService();
+            Console.WriteLine("Starting TaskExecutor");
+            TaskExecutor taskExecutor = new TaskExecutor(emailService);
+            _ = await taskExecutor.RunScheduledTasks();
+            Console.WriteLine("Ending TaskExecutor");
+        }
+    }
+
+    public class Function
+    {
+        public async Task<string> FunctionHandler(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            await Program.Main();
+            return JsonConvert.SerializeObject(new { Message = "Main method was triggered." });
         }
     }
 }

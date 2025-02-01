@@ -23,7 +23,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\TaskScheduler\TaskScheduler.csproj" />
-      <ProjectReference Include="..\TaskSchedulerAPI\TaskSchedulerAPI.csproj" />
     </ItemGroup>
 
 </Project>
